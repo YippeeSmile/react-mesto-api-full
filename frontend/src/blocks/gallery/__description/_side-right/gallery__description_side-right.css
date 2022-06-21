@@ -1,0 +1,5 @@
+.gallery__description_side-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

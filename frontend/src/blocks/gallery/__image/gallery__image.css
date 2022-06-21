@@ -1,0 +1,7 @@
+.gallery__image {
+    max-width: 100%;
+    min-width: 282px;
+    height: 282px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}

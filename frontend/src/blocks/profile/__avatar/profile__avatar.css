@@ -1,0 +1,11 @@
+.profile__avatar {
+    max-width: 168px;
+    padding: 4px 26px 4px 22px;
+    border-radius: 60px;
+    position: relative;
+}
+
+.profile__avatar:hover .profile__avatar-button {
+    opacity: 1;
+    transition: opacity .3s;
+}

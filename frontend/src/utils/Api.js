@@ -1,13 +1,7 @@
 class Api {
-    constructor({ baseUrl }) {
+    constructor({ baseUrl, headers }) {
+        this._headers = headers;
         this._baseUrl = baseUrl;
-    }
-
-    get _headers() {
-        return {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem("jwt")}`,
-        }
     }
 
     _getResponse(res) {
@@ -20,14 +14,14 @@ class Api {
 
     getUserInfo() {
         return fetch(`${this._baseUrl}/users/me`, {
-                headers: this._headers,
+                headers: this._headers
             })
             .then(this._getResponse)
     }
 
     getCards() {
         return fetch(`${this._baseUrl}/cards`, {
-                headers: this._headers,
+                headers: this._headers
             })
             .then(this._getResponse)
     }
@@ -101,5 +95,9 @@ class Api {
 }
 
 export const api = new Api({
-    baseUrl: 'http://localhost:3000',
+    baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-37',
+    headers: {
+        authorization: '6d1a7cef-7e68-4d69-9a5e-e37f87703afa',
+        'Content-Type': 'application/json'
+    }
 });

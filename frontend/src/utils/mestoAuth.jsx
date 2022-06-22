@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://localhost:3000';
+export const BASE_URL = 'https://auth.nomoreparties.co';
 
 export const checkResponse = (res) => {
   if(res.ok) {
@@ -29,13 +29,12 @@ export const authorize = ({email, password}) => {
   .then(checkResponse)
 }
 
-export const tokenCheck = () => {
+export const tokenCheck = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
     method: 'GET',
     headers: {
-      'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'Authorization' : `Bearer ${localStorage.getItem("jwt")}`,
+      'Authorization' : `Bearer ${token}`, //ваш токен JWT
     },
   })
   .then(checkResponse);

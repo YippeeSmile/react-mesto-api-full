@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://api.yippeesmile.students.nomoreparties.sbs';
+export const BASE_URL = 'http://localhost:3000';
 
 export const checkResponse = (res) => {
   if(res.ok) {
@@ -29,12 +29,13 @@ export const authorize = ({email, password}) => {
   .then(checkResponse)
 }
 
-export const tokenCheck = (token) => {
+export const tokenCheck = () => {
   return fetch(`${BASE_URL}/users/me`, {
     method: 'GET',
     headers: {
+      'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'Authorization' : `Bearer ${token}`, //ваш токен JWT
+      'Authorization' : `Bearer ${localStorage.getItem("jwt")}`,
     },
   })
   .then(checkResponse);

@@ -32,6 +32,10 @@ function App() {
   const [email, setEmail] = useState('');
   
   const navigate = useNavigate();
+  useEffect(() => {
+    checkToken();
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     if(loggedIn) {
@@ -46,21 +50,19 @@ function App() {
     }
   }, [loggedIn]);
 
-  useEffect(() => {
-    checkToken();
-    // eslint-disable-next-line
-  }, []);
-
   const checkToken = () => {
-    const token = localStorage.getItem('token');
-
-    if(token) {
-      mestoAuth
-      .tokenCheck(token)
-      .then((res) => {
-        setLoggedIn(true);
-        setEmail(res.data.email);
-        navigate('/')
+    const jwt = localStorage.getItem('token');
+    
+    if(jwt) {
+      console.log(jwt, 'jwt');
+      mestoAuth.tokenCheck(jwt)
+      .then((res) => {  
+        console.log(res, 'res')
+        if (res) {
+          setLoggedIn(true);
+          setEmail(res.email);
+          navigate('/')
+      }
       })
       .catch((err) => console.log(err));
     }
@@ -90,8 +92,9 @@ function App() {
       mestoAuth
       .authorize({ email, password})
       .then((res) => {
-        if (res.token) {
-          localStorage.setItem('token', res.token);
+        console.log(res, 'res')
+        if (res.jwt) {
+          localStorage.setItem('token', res.jwt);
           setEmail(email);
           setLoggedIn(true);
           setIsSuccessInfoTooltipOpen(true);

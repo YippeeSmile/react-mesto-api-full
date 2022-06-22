@@ -95,9 +95,5 @@ class Api {
 }
 
 export const api = new Api({
-    baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-37',
-    headers: {
-        authorization: '6d1a7cef-7e68-4d69-9a5e-e37f87703afa',
-        'Content-Type': 'application/json'
-    }
+    baseUrl: 'http://api.yippeesmilefront.students.nomoreparties.sbs',
 });

@@ -51,8 +51,9 @@ function App() {
   }, [loggedIn]);
 
   const checkToken = () => {
+    console.log(localStorage, 'localstorage')
     const jwt = localStorage.getItem('token');
-    
+    console.log(jwt, 'jwt')
     if(jwt) {
       console.log(jwt, 'jwt');
       mestoAuth.tokenCheck(jwt)
@@ -92,9 +93,8 @@ function App() {
       mestoAuth
       .authorize({ email, password})
       .then((res) => {
-        console.log(res, 'res')
-        if (res.jwt) {
-          localStorage.setItem('token', res.jwt);
+        if (res.token) {
+          localStorage.setItem('token', res.token);
           setEmail(email);
           setLoggedIn(true);
           setIsSuccessInfoTooltipOpen(true);

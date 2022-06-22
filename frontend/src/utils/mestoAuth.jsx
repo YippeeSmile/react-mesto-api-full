@@ -19,25 +19,26 @@ export const register = ({email, password}) => {
   .then(checkResponse)
 }
 
-export const authorize = ({email, password}) => {
+export const authorize = ({password, email}) => {
   return fetch(`${BASE_URL}/signin`, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ email: email, password: password})
+    body: JSON.stringify({ password: password, email: email})
   })
   .then(checkResponse)
 }
 
-export const tokenCheck = () => {
+export const tokenCheck = (token) => {
+  console.log(token, 'tokencheck')
   return fetch(`${BASE_URL}/users/me`, {
     method: 'GET',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${localStorage.getItem("token")}`,
+      'Authorization': `Bearer ${token}`,
     },
   })
   .then(checkResponse);

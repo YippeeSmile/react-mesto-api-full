@@ -12,12 +12,17 @@ const MONGO_DUPLICATE_KEY_CODE = 11000;
 const login = (req, res, next) => {
     const { email, password } = req.body;
     console.log(req.body, 'req.body')
+    if (!email || !password) {
+        return next(new BadRequestError({ message: 'Не передан email или пароль' }));
+    }
 
     return User.findUserByCredentials(email, password)
         .then((user) => {
             const token = jwt.sign({ _id: user._id },
                 JWT_SECRET, { expiresIn: '7d' });
+            console.log('token', token);
             res.send({ token });
+
         })
         .catch(next);
 };

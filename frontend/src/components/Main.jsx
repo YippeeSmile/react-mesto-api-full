@@ -37,7 +37,6 @@ function Main(props) {
         <section className="gallery">
           <ul className="gallery__items">
             {props.cards.map((element) => {
-              console.log("cardInMain", props.cards)
               return (
                 <Card
                   card={element}

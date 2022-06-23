@@ -20,6 +20,7 @@ function Card({ card, handleCardClick, onCardLike, onCardDelete }) {
   }`
 
   function handleClick() {
+    console.log('нажали на карточку', card)
     handleCardClick(card) //{ src: card.link, title: card.name }
   }
 
@@ -30,13 +31,14 @@ function Card({ card, handleCardClick, onCardLike, onCardDelete }) {
   return (
     <div className="card">
       <li className="gallery__item card">
-        {isOwn && <button
+      <button
           type="button"
           className={cardDeleteButtonClassName}
-          onClick={() => handleDeleteClick(card)}></button>}
+          onClick={() => handleDeleteClick(card)}
+        />
         <img
           className="gallery__image"
-          onClick={handleClick}
+          onClick={() => handleClick()}
           src={card.link}
           alt={card.name}
         />

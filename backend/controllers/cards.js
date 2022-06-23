@@ -60,7 +60,7 @@ const LikeCard = (req, res, next) => {
             if (!card) {
                 return next(new NotFoundError('Карточка не найдена.'));
             }
-            return res.send({ data: card });
+            return res.send(card);
         })
         .catch((err) => {
             if (err.name === 'CastError') {
@@ -71,12 +71,12 @@ const LikeCard = (req, res, next) => {
 };
 
 const dislikeCard = (req, res, next) => {
-    Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
+    Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true }, )
         .then((card) => {
             if (!card) {
                 return next(new NotFoundError('Карточка с таким id не найдена.'));
             }
-            return res.send({ data: card });
+            return res.send(card);
         })
         .catch((err) => {
             if (err.name === 'CastError') {

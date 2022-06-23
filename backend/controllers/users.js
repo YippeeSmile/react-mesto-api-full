@@ -11,7 +11,7 @@ const MONGO_DUPLICATE_KEY_CODE = 11000;
 
 const login = (req, res, next) => {
     const { email, password } = req.body;
-    console.log(email, password)
+
     if (!email || !password) {
         return next(new BadRequestError({ message: 'Не передан email или пароль' }));
     }
@@ -50,7 +50,7 @@ const createUser = (req, res, next) => {
             email: user.email,
         }))
         .catch((err) => {
-            console.log(err);
+            //console.log(err);
             if (err.name === 'ValidationError') {
                 next(new BadRequestError('Переданы некорректные данные.'));
             }

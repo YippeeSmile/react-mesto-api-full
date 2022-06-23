@@ -24,7 +24,10 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
-  const [selectedCard, setSelectedCard] = useState(null);
+  const [selectedCard, setSelectedCard] = useState({
+    name: "",
+    link: "",
+  });
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   const [isSuccessInfoTooltipOpen, setIsSuccessInfoTooltipOpen] = useState(false);
@@ -50,7 +53,6 @@ function App() {
     if(loggedIn) {
       Promise.all([api.getUserInfo(), api.getCards()])
        .then(([res, cards]) => {
-          console.log("Promise.res", res)
           const userData = {
           name: res.name,
           about: res.about,
@@ -59,8 +61,7 @@ function App() {
         }
         console.log('UserData', userData)
         setCurrentUser(userData);
-        console.log("Promise.cards", cards)
-        setCards(cards);
+        setCards(cards.reverse());
         })
         .catch((err) => {
         console.log(`Ошибка: ${err}`)
@@ -147,8 +148,8 @@ function App() {
     setIsAddPlacePopupOpen(true)
   }
 
-  const handleCardClick = (obj) => {
-    setSelectedCard(obj)
+  const handleCardClick = (card) => {
+    setSelectedCard(card)
   }
 
   const handleUpdateUser = (obj) => {
@@ -200,7 +201,7 @@ function App() {
   const handleCardDelete = (card) => {
     api
       .deleteCard(card._id)
-      .then((res) => {
+      .then(() => {
         setCards((cards) => cards.filter((item) => item._id !== card._id))
       })
       .catch((e) => console.error(e))

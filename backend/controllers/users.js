@@ -17,6 +17,7 @@ const login = (req, res, next) => {
     }
 
     return User.findUserByCredentials(email, password)
+        .then(console.log('User.findUserBy', user))
         .then((user) => {
             const token = jwt.sign({ _id: user._id },
                 NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key', { expiresIn: '7d' }

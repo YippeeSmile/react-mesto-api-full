@@ -49,7 +49,6 @@ function App() {
   useEffect(() => {
     if(loggedIn) {
       Promise.all([api.getUserInfo(), api.getCards()])
-      .then((res) => { console.log('ressss', res)})
         .then(([ProfileData, cardsData]) => {
           console.log('ProfileData, cardsData', ProfileData, cardsData)
         const data = {

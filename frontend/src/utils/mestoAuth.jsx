@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://localhost:3000';
+export const BASE_URL = 'http://api.yippee.smile.nomoredomains.xyz';
 
 export const checkResponse = (res) => {
   if(res.ok) {
@@ -29,6 +29,10 @@ export const authorize = ({email, password}) => {
     body: JSON.stringify({ email, password })
   })
   .then(checkResponse)
+  .then(res => {
+    localStorage.setItem('jwt', res.token)
+    return res
+  })
 }
 
 export const getContent = (token) => {
@@ -36,7 +40,8 @@ export const getContent = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
     method: 'GET',
     headers: {
-      'Authorization': `Bearer ${token}`, //localStorage.getItem("token")
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem("jwt")}`,
     },
   })
   .then(checkResponse);

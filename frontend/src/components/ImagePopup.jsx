@@ -1,6 +1,6 @@
 import React from "react";
 
-function ImagePopup(card, onClose, isOpen) { //props
+function ImagePopup({card, onClose, isOpen}) { //props
   return (
     <section 
       className={`popup ${

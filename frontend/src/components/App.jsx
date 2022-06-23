@@ -49,18 +49,18 @@ function App() {
   useEffect(() => {
     if(loggedIn) {
       Promise.all([api.getUserInfo(), api.getCards()])
-       .then(([data, res]) => {
-          console.log(data, res)
-          console.log('dataId', data.id)
-        const userData = {
-          name: data.name,
-          about: data.about,
-          avatar: data.avatar,
-          _id: data._id,
+       .then(([res, cards]) => {
+          console.log("Promise.res", res)
+          const userData = {
+          name: res.name,
+          about: res.about,
+          avatar: res.avatar,
+          _id: res._id,
         }
-        console.log('UserData', userData);
+        console.log('UserData', userData)
         setCurrentUser(userData);
-        setCards(res);
+        console.log("Promise.cards", cards)
+        setCards(cards);
         })
         .catch((err) => {
         console.log(`Ошибка: ${err}`)

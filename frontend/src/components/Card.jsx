@@ -3,24 +3,24 @@ import { useContext } from 'react';
 import { CurrentUserContext } from '../context/CurrentUserContext';
 
 function Card({ card, handleCardClick, onCardLike, onCardDelete }) {
-  const currentUser = useContext(CurrentUserContext) // подписываемся на контекст
 
-  const isOwn = card.owner._id === currentUser._id // Определяем, являемся ли мы владельцем текущей карточки
+  console.log('cardInCard', card)
+  const currentUser = useContext(CurrentUserContext);
 
-  // Создаём переменную, которую после зададим в `className` для кнопки удаления
+  const isOwn = card.owner._id === currentUser._id || card.owner === currentUser._id;
+
   const cardDeleteButtonClassName = `gallery__delete-button ${
     isOwn ? 'gallery__delete-button_visible' : 'gallery__delete-button_hidden'
   }`
 
-  const isLiked = card.likes.some((item) => item._id === currentUser._id)
+  const isLiked = card.likes.some(i => i._id === currentUser._id || i === currentUser._id);
 
-  // Создаём переменную, которую после зададим в `className` для кнопки лайка
   const cardLikeButtonClassName = `gallery__like-button ${
     isLiked ? 'gallery__like-button_field' : ''
   }`
 
   function handleClick() {
-    handleCardClick({ src: card.link, title: card.name })
+    handleCardClick(card) //{ src: card.link, title: card.name }
   }
 
   function handleDeleteClick(card) {
@@ -30,11 +30,10 @@ function Card({ card, handleCardClick, onCardLike, onCardDelete }) {
   return (
     <div className="card">
       <li className="gallery__item card">
-        <button
+        {isOwn && <button
           type="button"
           className={cardDeleteButtonClassName}
-          onClick={() => handleDeleteClick(card)}
-        />
+          onClick={() => handleDeleteClick(card)}></button>}
         <img
           className="gallery__image"
           onClick={handleClick}

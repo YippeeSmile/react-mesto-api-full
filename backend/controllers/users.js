@@ -44,12 +44,10 @@ const createUser = (req, res, next) => {
             password: hash,
         }))
         .then((user) => res.send({
-            data: {
-                name: user.name,
-                about: user.about,
-                avatar: user.avatar,
-                email: user.email,
-            },
+            name: user.name,
+            about: user.about,
+            avatar: user.avatar,
+            email: user.email,
         }))
         .catch((err) => {
             console.log(err);
@@ -65,14 +63,13 @@ const createUser = (req, res, next) => {
 
 const getUsers = (_req, res, next) => {
     User.find({})
-        .then((users) => res.status(200).send({ data: users }))
+        .then((users) => res.status(200).send(users))
         .catch(() => {
             next(new ServerError({ message: 'Ошибка на сервере' }));
         });
 };
 
 const getUser = (req, res, next) => {
-    console.log('getUserreqqqq', req)
     User.findById(req.params.userId)
         .then((user) => {
             if (!user) {
@@ -92,7 +89,7 @@ const updateUser = (req, res, next) => {
     const { name, about } = req.body;
 
     return User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
-        .then((user) => res.status(200).send({ data: user }))
+        .then((user) => res.status(200).send(user))
         .catch((err) => {
             if (err.name === 'ValidationError') {
                 next(new BadRequestError('Переданы некорректные данные.'));
@@ -105,7 +102,7 @@ const updateAvatar = (req, res, next) => {
     const { avatar } = req.body;
 
     return User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
-        .then((user) => res.status(200).send({ data: user }))
+        .then((user) => res.status(200).send(user))
         .catch((err) => {
             if (err.name === 'ValidationError') {
                 next(new BadRequestError({ message: 'Переданы некорректные данные.' }));
@@ -123,7 +120,7 @@ const getCurrentUser = (req, res, next) => {
                 throw new NotFoundError('Пользователь не найден');
             }
 
-            return res.send({ data: user });
+            return res.send(user);
         })
         .catch((err) => {
             if (err.kind === 'ObjectId') {

@@ -37,15 +37,11 @@ function Main(props) {
         <section className="gallery">
           <ul className="gallery__items">
             {props.cards.map((element) => {
+              console.log("cardInMain", props.cards)
               return (
                 <Card
                   card={element}
-                  src={element.link}
-                  likes={element.likes.length}
-                  hasLikes={element.likes}
-                  title={element.name}
                   key={element._id}
-                  owner={element.owner._id}
                   handleCardClick={props.handleCardClick}
                   onCardLike={props.handleCardLike}
                   onCardDelete={props.handleCardDelete}

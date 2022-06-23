@@ -48,24 +48,24 @@ function App() {
 
   useEffect(() => {
     if(loggedIn) {
+      history.push('/')
       Promise.all([api.getUserInfo(), api.getCards()])
-        .then(([ProfileData, cardsData]) => {
-          console.log('ProfileData, cardsData', ProfileData, cardsData)
-        const data = {
-          name: ProfileData.name,
-          about: ProfileData.about,
-          avatar: ProfileData.avatar,
-          _id: ProfileData._id,
+       .then(([data, res]) => {
+          console.log(data, res)
+        const userData = {
+          name: data.name,
+          about: data.about,
+          avatar: data.avatar,
+          _id: data._id,
         }
-        console.log(cardsData, 'cardsdata')
-        setCurrentUser(data);
-        setCards(cardsData);
+        setCurrentUser(userData);
+        setCards(res);
         })
         .catch((err) => {
         console.log(`Ошибка: ${err}`)
       })
     }
-  }, [loggedIn]);
+  }, [history, loggedIn]);
 
   const checkToken = () => {
     const jwt = localStorage.getItem('jwt');

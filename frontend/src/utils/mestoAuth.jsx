@@ -31,14 +31,12 @@ export const authorize = ({password, email}) => {
   .then(checkResponse)
 }
 
-export const tokenCheck = (token) => {
+export const getContent = (token) => {
   console.log(token, 'tokencheck')
   return fetch(`${BASE_URL}/users/me`, {
     method: 'GET',
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
+      'Authorization': `Bearer ${localStorage.getItem("jwt")}`,
     },
   })
   .then(checkResponse);

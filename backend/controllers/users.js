@@ -6,12 +6,12 @@ const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
 
-const { JWT_SECRET = 'some-secret-key' } = process.env;
+const { NODE_ENV, JWT_SECRET } = process.env;
 const MONGO_DUPLICATE_KEY_CODE = 11000;
 
 const login = (req, res, next) => {
     const { email, password } = req.body;
-    console.log(req.body, 'req.body')
+
     if (!email || !password) {
         return next(new BadRequestError({ message: 'Не передан email или пароль' }));
     }
@@ -19,8 +19,8 @@ const login = (req, res, next) => {
     return User.findUserByCredentials(email, password)
         .then((user) => {
             const token = jwt.sign({ _id: user._id },
-                JWT_SECRET, { expiresIn: '7d' });
-            console.log('token', token);
+                NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key', { expiresIn: '7d' }
+            );
             res.send({ token });
 
         })
@@ -72,12 +72,13 @@ const getUsers = (_req, res, next) => {
 };
 
 const getUser = (req, res, next) => {
+    console.log(req, 'reqqqq')
     User.findById(req.params.userId)
-        .then((users) => {
-            if (!users) {
+        .then((user) => {
+            if (!user) {
                 return next(new NotFoundError({ message: 'Пользователь с таким id не найден.' }));
             }
-            return res.status(200).send({ data: users });
+            return res.status(200).send(user);
         })
         .catch((err) => {
             if (err.name === 'CastError') {

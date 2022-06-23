@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import '../index';
 import Header from './Header';
 import Main from './Main';
@@ -19,6 +19,7 @@ import * as mestoAuth from '../utils/mestoAuth.jsx';
 
 
 function App() {
+  const [loggedIn, setLoggedIn] = useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
@@ -26,52 +27,66 @@ function App() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
-  const [loggedIn, setLoggedIn] = useState(false);
   const [isSuccessInfoTooltipOpen, setIsSuccessInfoTooltipOpen] = useState(false);
   const [isErrorInfoTooltipOpen, setIsErrorInfoTooltipOpen] = useState(false);
   const [email, setEmail] = useState('');
   
-  const navigate = useNavigate();
+  const history = useHistory();
+
   useEffect(() => {
     checkToken();
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
+    if (!loggedIn) {
+      history.push('/signin');
+      return;
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loggedIn]);
+
+  useEffect(() => {
     if(loggedIn) {
+      console.log('loggedin', loggedIn) //true
       Promise.all([api.getUserInfo(), api.getCards()])
-    .then(([res, cards]) => {
-        setCurrentUser(res)
-        setCards(cards)
-    })
-     .catch((err) => {
+        .then(([ProfileData, cardsData]) => {
+        const data = {
+          name: ProfileData.name,
+          about: ProfileData.about,
+          avatar: ProfileData.avatar,
+          _id: ProfileData._id,
+        }
+        setCurrentUser(data);
+        setCards(cardsData);
+        })
+        .catch((err) => {
         console.log(`Ошибка: ${err}`)
       })
     }
   }, [loggedIn]);
 
   const checkToken = () => {
-    console.log(localStorage, 'localstorage')
-    const jwt = localStorage.getItem('token');
-    console.log(jwt, 'jwt')
+    const jwt = localStorage.getItem('jwt');
     if(jwt) {
-      console.log(jwt, 'jwt');
-      mestoAuth.tokenCheck(jwt)
+      mestoAuth.getContent(jwt)
       .then((res) => {  
         console.log(res, 'res')
         if (res) {
+          console.log('tokencheckres', res)
           setLoggedIn(true);
           setEmail(res.email);
-          navigate('/')
+          history.push('/')
       }
       })
       .catch((err) => console.log(err));
+      localStorage.removeItem('jwt');
     }
   }
 
     const handleSignOut = () => {
       setLoggedIn(false);
-      localStorage.removeItem('token');
+      localStorage.removeItem('jwt');
       setCurrentUser({});
     }
 
@@ -79,9 +94,8 @@ function App() {
       return mestoAuth
       .register({ email, password})
       .then((res) => {
-  
         setIsSuccessInfoTooltipOpen(true);
-        navigate('/signin');
+        history.push('/signin');
       })
       .catch((err) => {
         setIsErrorInfoTooltipOpen(true);
@@ -90,16 +104,17 @@ function App() {
     }
 
     const handleLogin = (email, password) => {
-      mestoAuth
+      return mestoAuth
       .authorize({ email, password})
-      .then((res) => {
-        if (res.token) {
-          localStorage.setItem('token', res.token);
-          setEmail(email);
-          setLoggedIn(true);
-          setIsSuccessInfoTooltipOpen(true);
-          navigate('/');
+      .then(() => {
+        if (!email || !password) {
+          return
         }
+        setLoggedIn(true);
+        setEmail(email);
+          
+          //setIsSuccessInfoTooltipOpen(true);
+          history.push('/');
       })
       .catch((err) => {
         setIsErrorInfoTooltipOpen(true);
@@ -195,9 +210,11 @@ function App() {
         <Header email={email}
         handleSignOut={handleSignOut}/>
       
-      <Routes>
-        <Route exact path='/' element={
-            <ProtectedRoute loggedIn={loggedIn}>
+      <Switch>
+      <ProtectedRoute
+            loggedIn={loggedIn}
+            exact path="/"
+          >
            <Main
           onEditAvatar={handleEditAvatarClick}
           onEditProfile={handleEditProfileClick}
@@ -208,15 +225,14 @@ function App() {
           cards={cards}
            />
           </ProtectedRoute>
-        }
-        />
-        <Route path='/signup' element={
-          <Register onRegister={handleRegister} />}>
+       
+        <Route path='/signup'>
+          <Register onRegister={handleRegister} />
         </Route> 
-        <Route path='/signin' element={
-          <Login onLogin={handleLogin}/>}>
+        <Route path='/signin'>
+          <Login onLogin={handleLogin}/>
         </Route>
-        </Routes>
+        </Switch>
         {loggedIn && <Footer />}
 
         <InfoTooltip

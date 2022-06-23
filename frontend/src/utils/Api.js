@@ -6,7 +6,7 @@ class Api {
     get _headers() {
         return {
             'Content-Type': 'application/json',
-            'authorization': `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem('jwt')}`,
         }
     }
 
@@ -103,5 +103,5 @@ class Api {
 }
 
 export const api = new Api({
-    baseUrl: 'http://localhost:3000'
+    baseUrl: 'http://localhost:3000',
 });

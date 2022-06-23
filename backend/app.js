@@ -34,9 +34,9 @@ app.use(limiter);
 
 const { PORT = 3000 } = process.env;
 
-app.use(requestLogger);
-
 app.use(cors());
+
+app.use(requestLogger);
 
 app.get('/crash-test', () => {
     setTimeout(() => {
@@ -61,9 +61,9 @@ app.post('/signup', celebrate({
     }),
 }), createUser);
 
-app.get('/signout', (_req, res) => {
+/*app.get('/signout', (_req, res) => {
     res.status(200).clearCookie('jwt').send({ message: 'Выход' });
-});
+});*/
 
 app.use(auth);
 

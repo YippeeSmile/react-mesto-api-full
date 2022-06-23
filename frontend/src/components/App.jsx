@@ -48,16 +48,17 @@ function App() {
 
   useEffect(() => {
     if(loggedIn) {
-      history.push('/')
       Promise.all([api.getUserInfo(), api.getCards()])
        .then(([data, res]) => {
           console.log(data, res)
+          console.log('dataId', data.id)
         const userData = {
           name: data.name,
           about: data.about,
           avatar: data.avatar,
           _id: data._id,
         }
+        console.log('UserData', userData);
         setCurrentUser(userData);
         setCards(res);
         })
@@ -116,7 +117,7 @@ function App() {
         setEmail(email);
           
           //setIsSuccessInfoTooltipOpen(true);
-          history.push('/');
+        history.push('/');
       })
       .catch((err) => {
         setIsErrorInfoTooltipOpen(true);

@@ -72,7 +72,7 @@ const getUsers = (_req, res, next) => {
 };
 
 const getUser = (req, res, next) => {
-    console.log(req, 'reqqqq')
+    console.log('getUserreqqqq', req)
     User.findById(req.params.userId)
         .then((user) => {
             if (!user) {

@@ -48,15 +48,17 @@ function App() {
 
   useEffect(() => {
     if(loggedIn) {
-      console.log('loggedin', loggedIn) //true
       Promise.all([api.getUserInfo(), api.getCards()])
+      .then((res) => { console.log('ressss', res)})
         .then(([ProfileData, cardsData]) => {
+          console.log('ProfileData, cardsData', ProfileData, cardsData)
         const data = {
           name: ProfileData.name,
           about: ProfileData.about,
           avatar: ProfileData.avatar,
           _id: ProfileData._id,
         }
+        console.log(cardsData, 'cardsdata')
         setCurrentUser(data);
         setCards(cardsData);
         })
@@ -88,12 +90,13 @@ function App() {
       setLoggedIn(false);
       localStorage.removeItem('jwt');
       setCurrentUser({});
+      history.push('/signin');
     }
 
     const handleRegister = ({ email, password }) => {
       return mestoAuth
       .register({ email, password})
-      .then((res) => {
+      .then(() => {
         setIsSuccessInfoTooltipOpen(true);
         history.push('/signin');
       })

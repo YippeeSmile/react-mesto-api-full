@@ -16,7 +16,10 @@ export const register = ({email, password}) => {
     },
     body: JSON.stringify({ email, password })
   })
-  .then(checkResponse)
+  .then(res => {
+    localStorage.setItem('jwt', res.token)
+    return res
+  })
 }
 
 export const authorize = ({email, password}) => {
@@ -29,10 +32,6 @@ export const authorize = ({email, password}) => {
     body: JSON.stringify({ email, password })
   })
   .then(checkResponse)
-  .then(res => {
-    localStorage.setItem('jwt', res.token)
-    return res
-  })
 }
 
 export const getContent = (token) => {
@@ -41,7 +40,7 @@ export const getContent = (token) => {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${localStorage.getItem("jwt")}`,
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
     },
   })
   .then(checkResponse);

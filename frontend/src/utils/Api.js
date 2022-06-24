@@ -6,7 +6,7 @@ class Api {
     get _headers() {
         return {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('jwt')}`,
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
         }
     }
 
@@ -103,5 +103,5 @@ class Api {
 }
 
 export const api = new Api({
-    baseUrl: 'http://api.yippee.smile.nomoredomains.xyz/',
+    baseUrl: 'http://api.yippee.smile.nomoredomains.xyz',
 });

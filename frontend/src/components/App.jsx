@@ -59,7 +59,6 @@ function App() {
           avatar: res.avatar,
           _id: res._id,
         }
-        console.log('UserData', userData)
         setCurrentUser(userData);
         setCards(cards.reverse());
         })
@@ -76,7 +75,6 @@ function App() {
       .then((res) => {  
         console.log(res, 'res')
         if (res) {
-          console.log('tokencheckres', res)
           setLoggedIn(true);
           setEmail(res.email);
           history.push('/')

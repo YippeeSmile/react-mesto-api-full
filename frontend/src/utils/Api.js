@@ -6,7 +6,7 @@ class Api {
     get _headers() {
         return {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
         }
     }
 
@@ -82,9 +82,9 @@ class Api {
             .then(this._getResponse)
     }
 
-    changeLikeCardStatus(id, like) {
+    changeLikeCardStatus(id, isLiked) {
         return fetch(`${this._baseUrl}/cards/${id}/likes`, {
-                method: like ? "PUT" : "DELETE",
+                method: isLiked ? "PUT" : "DELETE",
                 headers: this._headers
             })
             .then(this._getResponse)

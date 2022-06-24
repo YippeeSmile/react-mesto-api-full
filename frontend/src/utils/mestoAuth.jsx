@@ -16,10 +16,7 @@ export const register = ({email, password}) => {
     },
     body: JSON.stringify({ email, password })
   })
-  .then(res => {
-    localStorage.setItem('jwt', res.token)
-    return res
-  })
+  .then(checkResponse);
 }
 
 export const authorize = ({email, password}) => {
@@ -32,6 +29,11 @@ export const authorize = ({email, password}) => {
     body: JSON.stringify({ email, password })
   })
   .then(checkResponse)
+  .then(res => {
+    console.log('res.roken', res.token)
+    localStorage.setItem('jwt', res.token)
+    return res
+  })
 }
 
 export const getContent = (token) => {
@@ -39,8 +41,9 @@ export const getContent = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
     method: 'GET',
     headers: {
+      'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      'Authorization': `Bearer ${localStorage.getItem('token')}`, //'Authorization': `Bearer ${localStorage.getItem('token')}`,
     },
   })
   .then(checkResponse);

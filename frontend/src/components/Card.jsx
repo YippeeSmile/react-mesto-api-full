@@ -4,7 +4,6 @@ import { CurrentUserContext } from '../context/CurrentUserContext';
 
 function Card({ card, handleCardClick, onCardLike, onCardDelete }) {
 
-  console.log('cardInCard', card)
   const currentUser = useContext(CurrentUserContext);
 
   const isOwn = card.owner._id === currentUser._id || card.owner === currentUser._id;
@@ -20,7 +19,6 @@ function Card({ card, handleCardClick, onCardLike, onCardDelete }) {
   }`
 
   function handleClick() {
-    console.log('нажали на карточку', card)
     handleCardClick(card) //{ src: card.link, title: card.name }
   }
 

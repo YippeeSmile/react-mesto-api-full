@@ -69,11 +69,10 @@ function App() {
   }, [history, loggedIn]);
 
   const checkToken = () => {
-    const jwt = localStorage.getItem('jwt');
+    const jwt = localStorage.getItem('token');
     if(jwt) {
       mestoAuth.getContent(jwt)
       .then((res) => {  
-        console.log(res, 'res')
         if (res) {
           setLoggedIn(true);
           setEmail(res.email);
@@ -81,7 +80,7 @@ function App() {
       }
       })
       .catch((err) => console.log(err));
-      localStorage.removeItem('jwt');
+      localStorage.removeItem('token');
     }
   }
 
@@ -128,7 +127,10 @@ function App() {
     setIsEditProfilePopupOpen(false)
     setIsAddPlacePopupOpen(false)
     setIsEditAvatarPopupOpen(false)
-    setSelectedCard(null)
+    setSelectedCard({
+      name: "",
+      link: "",
+    }); //null
     setIsImagePopupOpen(false);
     setIsSuccessInfoTooltipOpen(false);
     setIsErrorInfoTooltipOpen(false);
@@ -185,11 +187,12 @@ function App() {
 
   const handleCardLike = (card) => {
     // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some((item) => item._id === currentUser._id)
+    const isLiked = card.likes.some((item) => item === currentUser._id)
     // Отправляем запрос в API и получаем обновлённые данные карточкиs
     api
       .changeLikeCardStatus(card._id, !isLiked)
       .then((c) => {
+        console.log('like', c)
         setCards((cards) =>
           cards.map((item) => (item._id === card._id ? c : item)),
         )

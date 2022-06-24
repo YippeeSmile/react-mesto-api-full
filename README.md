@@ -3,4 +3,4 @@
   
 Пожалуйста, прикрепите в это описание ссылку на сайт, размещенный на Яндекс.Облаке.
 
-ssh
+(https://yippee.smile.nomoredomains.xyz)[https://yippee.smile.nomoredomains.xyz]

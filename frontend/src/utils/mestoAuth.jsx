@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://api.yippee.smile.nomoredomains.xyz';
+export const BASE_URL = 'https://api.yippee.smile.nomoredomains.xyz';
 
 export const checkResponse = (res) => {
   if(res.ok) {

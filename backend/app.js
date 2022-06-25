@@ -12,8 +12,7 @@ const auth = require('./middlewares/auth');
 const NotFoundError = require('./errors/NotFoundError');
 const errorHandler = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-
-const regExp = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/;
+const regExp = require('./utils/regexp');
 
 const app = express();
 
@@ -23,6 +22,8 @@ app.use(cookieParser());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(requestLogger);
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -36,8 +37,6 @@ app.use(limiter);
 const { PORT = 3000 } = process.env;
 
 app.use(cors());
-
-app.use(requestLogger);
 
 app.get('/crash-test', () => {
     setTimeout(() => {
@@ -61,10 +60,6 @@ app.post('/signup', celebrate({
         password: Joi.string().required(),
     }),
 }), createUser);
-
-app.get('/signout', (_req, res) => {
-    res.status(200).clearCookie('jwt').send({ message: 'Выход' });
-});
 
 app.use(auth);
 

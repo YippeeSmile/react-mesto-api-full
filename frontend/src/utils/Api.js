@@ -103,5 +103,5 @@ class Api {
 }
 
 export const api = new Api({
-    baseUrl: 'https://api.yippee.smile.nomoredomains.xyz',
+    baseUrl: 'http://api.yippee.smile.nomoredomains.xyz',
 });

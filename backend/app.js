@@ -12,7 +12,8 @@ const auth = require('./middlewares/auth');
 const NotFoundError = require('./errors/NotFoundError');
 const errorHandler = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const regExp = require('./utils/regexp');
+
+const regExp = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/;
 
 const app = express();
 
@@ -26,10 +27,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
 
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100,
-    standardHeaders: true,
-    legacyHeaders: false,
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 
 app.use(limiter);
@@ -39,26 +40,26 @@ const { PORT = 3000 } = process.env;
 app.use(cors());
 
 app.get('/crash-test', () => {
-    setTimeout(() => {
-        throw new Error('Сервер сейчас упадёт');
-    }, 0);
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
 });
 
 app.post('/signin', celebrate({
-    body: Joi.object().keys({
-        email: Joi.string().email().required(),
-        password: Joi.string().required(),
-    }),
+  body: Joi.object().keys({
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+  }),
 }), login);
 
 app.post('/signup', celebrate({
-    body: Joi.object().keys({
-        name: Joi.string().min(2).max(30),
-        about: Joi.string().min(2).max(30),
-        avatar: Joi.string().pattern(regExp),
-        email: Joi.string().email().required(),
-        password: Joi.string().required(),
-    }),
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().pattern(regExp),
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+  }),
 }), createUser);
 
 app.use(auth);

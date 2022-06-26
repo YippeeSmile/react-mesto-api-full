@@ -4,11 +4,7 @@ const { celebrate, Joi } = require('celebrate');
 const regExp = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/;
 
 const {
-  createCard,
-  getCards,
-  deleteCard,
-  LikeCard,
-  dislikeCard,
+  createCard, getCards, deleteCard, LikeCard, dislikeCard,
 } = require('../controllers/cards');
 
 router.post('/cards', celebrate({

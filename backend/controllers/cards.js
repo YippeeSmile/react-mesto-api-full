@@ -1,5 +1,4 @@
 const Card = require('../models/card');
-const ServerError = require('../errors/ServerError');
 const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
 const ForbiddenError = require('../errors/ForbiddenError');
@@ -20,7 +19,7 @@ const createCard = (req, res, next) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные.'));
       }
-      next(new ServerError('Ошибка на сервере'));
+      return next(err);
     });
 };
 
@@ -55,7 +54,7 @@ const LikeCard = (req, res, next) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные.'));
       }
-      next(new ServerError('Ошибка на сервере'));
+      return next(err);
     });
 };
 
@@ -71,7 +70,7 @@ const dislikeCard = (req, res, next) => {
       if (err.name === 'CastError') {
         next(new BadRequestError({ message: 'Переданы некорректные данные.' }));
       }
-      next(new ServerError({ message: 'Ошибка на сервере' }));
+      return next(err);
     });
 };
 

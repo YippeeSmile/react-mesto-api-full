@@ -25,11 +25,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100,
-    standardHeaders: true,
-    legacyHeaders: false,
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
 });
+
+app.use(requestLogger);
 
 app.use(limiter);
 
@@ -37,33 +39,31 @@ const { PORT = 3000 } = process.env;
 
 app.use(cors());
 
-app.use(requestLogger);
-
 app.get('/crash-test', () => {
-    setTimeout(() => {
-        throw new Error('Сервер сейчас упадёт');
-    }, 0);
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
 });
 
 app.post('/signin', celebrate({
-    body: Joi.object().keys({
-        email: Joi.string().email().required(),
-        password: Joi.string().required(),
-    }),
+  body: Joi.object().keys({
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+  }),
 }), login);
 
 app.post('/signup', celebrate({
-    body: Joi.object().keys({
-        name: Joi.string().min(2).max(30),
-        about: Joi.string().min(2).max(30),
-        avatar: Joi.string().pattern(regExp),
-        email: Joi.string().email().required(),
-        password: Joi.string().required(),
-    }),
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().pattern(regExp),
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+  }),
 }), createUser);
 
 app.get('/signout', (_req, res) => {
-    res.status(200).clearCookie('jwt').send({ message: 'Выход' });
+  res.status(200).clearCookie('jwt').send({ message: 'Выход' });
 });
 
 app.use(auth);

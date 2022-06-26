@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
-const ServerError = require('../errors/ServerError');
 const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
@@ -52,7 +51,6 @@ const createUser = (req, res, next) => {
       email: user.email,
     }))
     .catch((err) => {
-      // console.log(err);
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные.'));
       }
@@ -66,9 +64,7 @@ const createUser = (req, res, next) => {
 const getUsers = (_req, res, next) => {
   User.find({})
     .then((users) => res.status(200).send(users))
-    .catch(() => {
-      next(new ServerError({ message: 'Ошибка на сервере' }));
-    });
+    .catch(next);
 };
 
 const getUser = (req, res, next) => {
@@ -95,8 +91,9 @@ const updateUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные.'));
+      } else {
+        next(err);
       }
-      next(new ServerError({ message: 'Ошибка на сервере' }));
     });
 };
 
@@ -107,11 +104,10 @@ const updateAvatar = (req, res, next) => {
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError({ message: 'Переданы некорректные данные.' }));
+        next(new BadRequestError('Переданы некорректные данные.'));
       } else {
-        next(new ServerError({ message: 'Ошибка на сервере' }));
+        next(err);
       }
-      next(err);
     });
 };
 
